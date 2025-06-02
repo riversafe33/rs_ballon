@@ -3,6 +3,15 @@ Config = {}
 -- Change the language
 Config.Lang = 'English' -- 'English' -- 'French' -- 'Portuguese_BR'  -- 'German'  -- 'Italian' -- 'Spanish'
 
+Config.Noti = {
+    Buy = "You have sold your balloon for ",
+    Dont = "No se encontró el precio del globo en la configuración.",
+    Error = "Error: No se recibieron datos válidos para la venta.",
+    Tranfer = "Balloon transferred successfully",
+    Received = "You received a Hot Air Balloon",
+    has = "The player already has a Hot Air Balloon.",
+}
+
 ------------------------------- Hot Air Balloon Rental ------------------------------
 Config.KeyToBuyBalloon = 0xD9D0E1C0 -- [ SPACE ] Key to rent the balloon
 
