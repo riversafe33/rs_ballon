@@ -1,3 +1,4 @@
+local Core = exports.vorp_core:GetCore()
 local T = Translation.Langs[Config.Lang]
 
 local balloon
@@ -374,11 +375,10 @@ end)
 
 
 local spawn_boat = nil
-local balloonRoles = {} 
 
 RegisterNetEvent('rs_ballon:spawnBoat')
 AddEventHandler('rs_ballon:spawnBoat', function(_model)
-    if DoesEntityExist(spawn_boat) then
+    if spawn_boat ~= nil and DoesEntityExist(spawn_boat) then
         DeleteVehicle(spawn_boat)
         spawn_boat = nil
     end
@@ -400,9 +400,18 @@ AddEventHandler('rs_ballon:spawnBoat', function(_model)
     SetNetworkIdExistsOnAllMachines(netId, true)
 
     spawn_boat = vehicle
+end)
 
-    -- Asignamos el rol "captain" al jugador que spawnea este globo
-    balloonRoles[netId] = { captain = PlayerId() }
+RegisterNetEvent("rs_ballon:deleteTemporaryBalloon")
+AddEventHandler("rs_ballon:deleteTemporaryBalloon", function()
+    if spawn_boat ~= nil and DoesEntityExist(spawn_boat) then
+        DeleteVehicle(spawn_boat)
+        spawn_boat = nil
+        Core.NotifyRightTip(T.BalloonExpired, 4000)
+    end
+end)
 
-    boating = true
+RegisterNetEvent("rs_ballon:balloonWarning")
+AddEventHandler("rs_ballon:balloonWarning", function()
+    Core.NotifyLeft(T.Tittle,T.BalloonWarning, "generic_textures", "tick", 4000, "COLOR_GREEN")
 end)
