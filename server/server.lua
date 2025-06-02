@@ -20,25 +20,42 @@ AddEventHandler('rs_ballon:checkOwned', function()
     end)
 end)
 
-RegisterNetEvent('rs_ballon:BuyBalloon', function()
+-- rental ballon
+
+RegisterNetEvent('rs_ballon:BuyBalloon')
+AddEventHandler('rs_ballon:BuyBalloon', function()
     local src = source
     local _model = `hotairballoon01`
     local Character = VORPcore.getUser(src).getUsedCharacter
     local money = Character.money
     local cost = Config.BallonPrice
+    local useTime = Config.BallonUseTime * 60000 -- Convertir minutos a milisegundos
+    local enableTimer = Config.EnableBalloonTimer -- Activar/desactivar tiempo de uso
 
     if Config.EnableTax then
         if money >= cost then
             Character.removeCurrency(0, cost)
-            VORPcore.NotifyRightTip(src, T.TaxOfUse .. ' ' .. cost .. ' ' .. T.ToUseBalloon, 4000)
+            VORPcore.NotifyRightTip(src, T.TaxOfUse .. '' .. cost .. '$ ' .. T.ToUseBalloon, 4000)
 
+            -- Crear el globo en el cliente
             TriggerClientEvent("rs_ballon:spawnBoat", src, _model)
 
+            -- Si el temporizador está activado, programar la advertencia y eliminación
+            if enableTimer then
+                SetTimeout(useTime - 30000, function()
+                    TriggerClientEvent("rs_ballon:balloonWarning", src)
+                end)
+
+                SetTimeout(useTime, function()
+                    TriggerClientEvent("rs_ballon:deleteTemporaryBalloon", src)
+                end)
+            end
         else
-            VORPcore.NotifyRightTip(src, T.IfNecessary .. ' ' .. cost .. ' ' .. T.ToUseBalloon, 4000)
+            VORPcore.NotifyRightTip(src, T.IfNecessary .. '' .. cost .. '$ ' .. T.ToUseBalloon, 4000)
         end
     end
 end)
+
 
 local VorpCore = {}
 
