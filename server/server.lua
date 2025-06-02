@@ -181,7 +181,7 @@ AddEventHandler('rs_ballon:sellboat', function(args)
             ['@globo'] = _model
         })
 
-        TriggerClientEvent("vorp:TipBottom", source, T.Buy .. " " .. sell_price .. "!", 5000)
+        TriggerClientEvent("vorp:TipBottom", source, T.Buy .. " " .. sell_price .. "$", 5000)
     else
         TriggerClientEvent("vorp:TipBottom", source, T.Dont, 5000)
     end
