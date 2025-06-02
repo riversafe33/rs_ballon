@@ -1,7 +1,6 @@
 local VORPcore = exports.vorp_core:GetCore()
 local T = Translation.Langs[Config.Lang]
 
-
 RegisterServerEvent('rs_ballon:checkOwned')
 AddEventHandler('rs_ballon:checkOwned', function()
     local src = source
@@ -21,10 +20,6 @@ AddEventHandler('rs_ballon:checkOwned', function()
     end)
 end)
 
-
-
-
--- Evento para pagar uso del globo si está habilitado el impuesto
 RegisterNetEvent('rs_ballon:BuyBalloon', function()
     local src = source
     local _model = `hotairballoon01`
@@ -113,7 +108,6 @@ AddEventHandler('rs_ballon:loadownedboats', function()
     end)
 end)
 
-
 RegisterServerEvent('rs_ballon:transferBalloon')
 AddEventHandler('rs_ballon:transferBalloon', function(targetId)
     local src = source
@@ -135,7 +129,7 @@ AddEventHandler('rs_ballon:transferBalloon', function(targetId)
         ['@charid'] = target_charid
     }, function(existing)
         if existing and existing[1] then
-            TriggerClientEvent("vorp:TipBottom", src, Config.Noti.has, 5000)
+            TriggerClientEvent("vorp:TipBottom", src, T.has, 5000)
         else
             -- Transferir el globo al nuevo jugador
             exports.ghmattimysql:execute('UPDATE globo SET identifier = @newIdentifier, charid = @newCharId WHERE identifier = @oldIdentifier AND charid = @oldCharId LIMIT 1', {
@@ -144,8 +138,8 @@ AddEventHandler('rs_ballon:transferBalloon', function(targetId)
                 ['@oldIdentifier'] = sender_identifier,
                 ['@oldCharId'] = sender_charid
             }, function()
-                TriggerClientEvent("vorp:TipBottom", src, Config.Noti.Tranfer, 5000)
-                TriggerClientEvent("vorp:TipBottom", tonumber(targetId), Config.Noti.Received, 5000)
+                TriggerClientEvent("vorp:TipBottom", src, T.Tranfer, 5000)
+                TriggerClientEvent("vorp:TipBottom", tonumber(targetId), T.Received, 5000)
             end)
         end
     end)
@@ -154,7 +148,7 @@ end)
 RegisterServerEvent('rs_ballon:sellboat')
 AddEventHandler('rs_ballon:sellboat', function(args)
     if not args or not args.Model then
-        TriggerClientEvent("vorp:TipBottom", source, Config.Noti.Error, 5000)
+        TriggerClientEvent("vorp:TipBottom", source, T.Error, 5000)
         return
     end
 
@@ -187,8 +181,8 @@ AddEventHandler('rs_ballon:sellboat', function(args)
             ['@globo'] = _model
         })
 
-        TriggerClientEvent("vorp:TipBottom", source, Config.Noti.Buy .. " " .. sell_price .. "!", 5000)
+        TriggerClientEvent("vorp:TipBottom", source, T.Buy .. " " .. sell_price .. "!", 5000)
     else
-        TriggerClientEvent("vorp:TipBottom", source, Config.Noti.Dont, 5000)
+        TriggerClientEvent("vorp:TipBottom", source, T.Dont, 5000)
     end
 end)
