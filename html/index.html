@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prompt</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Ocultar los elementos por defecto */
+        #prompt, #promptExit {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="promptAlqui">Press [Space] to Rent the Hot Air Balloon</div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Asegurar que los elementos estén ocultos al cargar la página
+            document.getElementById("promptAlqui").style.display = "none"; 
+        });
+
+        window.addEventListener('message', function(event) {
+            if (event.data.action === "showAlqui") {
+                document.getElementById("promptAlqui").style.display = "block";
+            } else if (event.data.action === "hideAlqui") {
+                document.getElementById("promptAlqui").style.display = "none";
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+}
+
+#promptAlqui {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.849);
+    color: #a77535be;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 20px;
+    border: 2px solid black; /* Esto agrega un borde negro */
+}
