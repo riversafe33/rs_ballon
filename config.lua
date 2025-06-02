@@ -10,6 +10,11 @@ Config.KeyToBuyBalloon = 0xD9D0E1C0 -- [ SPACE ] Key to rent the balloon
 Config.EnableTax = true   -- If true, the balloon rental fee will be charged, if false, it will be free.
 Config.BallonPrice = 5.00 -- Rental price
 
+Config.EnableBalloonTimer = true -- If you set it to false, the balloon will not disappear automatically.
+Config.BallonUseTime = 30 -- Rental duration time in minutes
+
+
+
 -- Hot Air Balloon Rental locations
 Config.BalloonLocations = {
   {
