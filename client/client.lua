@@ -292,7 +292,7 @@ function OpenOwnBoatsMenu()
 	function(data, menu)
 		if data.current.value then
 			local boatget = data.current.info
-			TriggerEvent('rs_ballon:spawnBoat', boatget)
+			TriggerEvent('rs_ballon:spawnBalloon', boatget)
 			menu.close()
 		end
 	end,
@@ -376,16 +376,21 @@ end)
 
 local spawn_boat = nil
 
-RegisterNetEvent('rs_ballon:spawnBoat')
-AddEventHandler('rs_ballon:spawnBoat', function(_model)
-    if spawn_boat ~= nil and DoesEntityExist(spawn_boat) then
+RegisterNetEvent('rs_ballon:spawnBalloon')
+AddEventHandler('rs_ballon:spawnBalloon', function()
+    if DoesEntityExist(spawn_boat) then
         DeleteVehicle(spawn_boat)
         spawn_boat = nil
     end
 
-    RequestModel(_model)
-    while not HasModelLoaded(_model) do
-        Citizen.Wait(1)
+    local balloonModel = 'hotairballoon01'  -- Ajusta al modelo correcto si es necesario
+    local objectModel = 'p_ambfloorscrub01x'
+
+    RequestModel(balloonModel)
+    RequestModel(objectModel)
+
+    while not HasModelLoaded(balloonModel) or not HasModelLoaded(objectModel) do
+        Citizen.Wait(1000)
     end
 
     local playerPed = PlayerPedId()
@@ -393,13 +398,25 @@ AddEventHandler('rs_ballon:spawnBoat', function(_model)
     local forward = GetEntityForwardVector(playerPed)
     local spawnCoords = coords + forward * 5.0
 
-    local vehicle = CreateVehicle(_model, spawnCoords.x, spawnCoords.y, spawnCoords.z, GetEntityHeading(playerPed), true, true)
-    SetEntityAsMissionEntity(vehicle, true, true)
+    local balloon = CreateVehicle(GetHashKey(balloonModel), spawnCoords.x, spawnCoords.y, spawnCoords.z, GetEntityHeading(playerPed), true, false)
+    SetEntityAsMissionEntity(balloon, true, true)
 
-    local netId = NetworkGetNetworkIdFromEntity(vehicle)
+    -- Asegurar que el globo sea visible para todos los jugadores en el servidor
+    local netId = NetworkGetNetworkIdFromEntity(balloon)
     SetNetworkIdExistsOnAllMachines(netId, true)
 
-    spawn_boat = vehicle
+    local object = CreateObject(GetHashKey(objectModel), spawnCoords.x, spawnCoords.y, spawnCoords.z, true, true, false)
+    AttachEntityToEntity(object, balloon, 0, 0.0, 0.0, 0.09, 0.0, 0.0, 0.0, true, true, true, false, false, true, true, true)
+
+    -- Hacer que el objeto adjunto sea invisible
+    SetEntityVisible(object, false)
+
+    -- Liberar los modelos de memoria
+    SetModelAsNoLongerNeeded(balloonModel)
+    SetModelAsNoLongerNeeded(objectModel)
+
+    spawn_boat = balloon
+    boating = true
 end)
 
 RegisterNetEvent("rs_ballon:deleteTemporaryBalloon")
