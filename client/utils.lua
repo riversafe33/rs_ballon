@@ -20,7 +20,7 @@ Citizen.CreateThread(function()
                 end
 
                 if IsControlJustReleased(0, Config.KeyToBuyBalloon) then
-                    TriggerServerEvent('rs_ballon:BuyBalloon', Config.BalloonModel or "hotairballoon01x")
+                    TriggerServerEvent('rs_ballon:BuyBalloon', Config.BalloonModel)
                 end
 
                 nearLocation = true
