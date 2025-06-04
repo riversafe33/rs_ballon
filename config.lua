@@ -11,7 +11,7 @@ Config.EnableTax = true   -- If true, the balloon rental fee will be charged, if
 Config.BallonPrice = 5.00 -- Rental price
 
 Config.EnableBalloonTimer = true -- If you set it to false, the balloon will not disappear automatically.
-Config.BallonUseTime = 30 -- Rental duration time in minutes
+Config.BallonUseTime = 1 -- Rental duration time in minutes
 
 
 
@@ -57,7 +57,6 @@ Config.Globo = {
     ['Param'] = {
       ['Name'] = "Hot Air Balloon", -- Change it to your language
       ['Price'] = 1250,               -- Sale price
-      ['Model'] = "hotairballoon01",  -- don´t touch
     }
   },
 }
