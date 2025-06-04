@@ -37,7 +37,7 @@ AddEventHandler('rs_ballon:BuyBalloon', function()
             VORPcore.NotifyRightTip(src, T.TaxOfUse .. '' .. cost .. '$ ' .. T.ToUseBalloon, 4000)
 
             -- Crear el globo en el cliente
-            TriggerClientEvent("rs_ballon:spawnBalloon", src)
+            TriggerClientEvent("rs_ballon:spawnBalloon1", src)
 
             -- Si el temporizador está activado, programar la advertencia y eliminación
             if enableTimer then
