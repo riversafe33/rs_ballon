@@ -419,11 +419,56 @@ AddEventHandler('rs_ballon:spawnBalloon', function()
     boating = true
 end)
 
+local spawn_ballon = nil
+
+RegisterNetEvent('rs_ballon:spawnBalloon1')
+AddEventHandler('rs_ballon:spawnBalloon1', function()
+    if DoesEntityExist(spawn_ballon) then
+        DeleteVehicle(spawn_ballon)
+        spawn_ballon = nil
+    end
+
+    local balloonModel = 'hotairballoon01'  -- Ajusta al modelo correcto si es necesario
+    local objectModel = 'p_ambfloorscrub01x'
+
+    RequestModel(balloonModel)
+    RequestModel(objectModel)
+
+    while not HasModelLoaded(balloonModel) or not HasModelLoaded(objectModel) do
+        Citizen.Wait(1000)
+    end
+
+    local playerPed = PlayerPedId()
+    local coords = GetEntityCoords(playerPed)
+    local forward = GetEntityForwardVector(playerPed)
+    local spawnCoords = coords + forward * 5.0
+
+    local balloon = CreateVehicle(GetHashKey(balloonModel), spawnCoords.x, spawnCoords.y, spawnCoords.z, GetEntityHeading(playerPed), true, false)
+    SetEntityAsMissionEntity(balloon, true, true)
+
+    -- Asegurar que el globo sea visible para todos los jugadores en el servidor
+    local netId = NetworkGetNetworkIdFromEntity(balloon)
+    SetNetworkIdExistsOnAllMachines(netId, true)
+
+    local object = CreateObject(GetHashKey(objectModel), spawnCoords.x, spawnCoords.y, spawnCoords.z, true, true, false)
+    AttachEntityToEntity(object, balloon, 0, 0.0, 0.0, 0.09, 0.0, 0.0, 0.0, true, true, true, false, false, true, true, true)
+
+    -- Hacer que el objeto adjunto sea invisible
+    SetEntityVisible(object, false)
+
+    -- Liberar los modelos de memoria
+    SetModelAsNoLongerNeeded(balloonModel)
+    SetModelAsNoLongerNeeded(objectModel)
+
+    spawn_ballon = balloon
+    boating = true
+end)
+
 RegisterNetEvent("rs_ballon:deleteTemporaryBalloon")
 AddEventHandler("rs_ballon:deleteTemporaryBalloon", function()
-    if spawn_boat ~= nil and DoesEntityExist(spawn_boat) then
-        DeleteVehicle(spawn_boat)
-        spawn_boat = nil
+    if spawn_ballon ~= nil and DoesEntityExist(spawn_ballon) then
+        DeleteVehicle(spawn_ballon)
+        spawn_ballon = nil
         Core.NotifyRightTip(T.BalloonExpired, 4000)
     end
 end)
