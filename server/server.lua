@@ -25,7 +25,6 @@ end)
 RegisterNetEvent('rs_ballon:BuyBalloon')
 AddEventHandler('rs_ballon:BuyBalloon', function()
     local src = source
-    local _model = `hotairballoon01`
     local Character = VORPcore.getUser(src).getUsedCharacter
     local money = Character.money
     local cost = Config.BallonPrice
@@ -38,7 +37,7 @@ AddEventHandler('rs_ballon:BuyBalloon', function()
             VORPcore.NotifyRightTip(src, T.TaxOfUse .. '' .. cost .. '$ ' .. T.ToUseBalloon, 4000)
 
             -- Crear el globo en el cliente
-            TriggerClientEvent("rs_ballon:spawnBoat", src, _model)
+            TriggerClientEvent("rs_ballon:spawnBalloon", src)
 
             -- Si el temporizador está activado, programar la advertencia y eliminación
             if enableTimer then
@@ -79,7 +78,6 @@ end
 RegisterServerEvent('rs_ballon:buyboat')
 AddEventHandler('rs_ballon:buyboat', function(args)
     local _price = args['Price']
-    local _model = args['Model']
     local _name = args['Name']
     local User = VorpCore.getUser(source).getUsedCharacter
 
@@ -97,11 +95,10 @@ AddEventHandler('rs_ballon:buyboat', function(args)
     local Parameters = {
         ['identifier'] = u_identifier,
         ['charid'] = u_charid,
-        ['globo'] = _model,
         ['name'] = _name
     }
 
-    exports.ghmattimysql:execute("INSERT INTO globo (`identifier`, `charid`, `globo`, `name`) VALUES (@identifier, @charid, @globo, @name)", Parameters)
+    exports.ghmattimysql:execute("INSERT INTO globo (`identifier`, `charid`, `name`) VALUES (@identifier, @charid, @name)", Parameters)
 
     TriggerClientEvent("vorp:TipBottom", source, T.Noti1, 5000)
 end)
@@ -164,12 +161,11 @@ end)
 
 RegisterServerEvent('rs_ballon:sellboat')
 AddEventHandler('rs_ballon:sellboat', function(args)
-    if not args or not args.Model then
+    if not args then
         TriggerClientEvent("vorp:TipBottom", source, T.Error, 5000)
         return
     end
 
-    local _model = args.Model
     local User = VorpCore.getUser(source).getUsedCharacter
 
     local u_identifier = User.identifier
@@ -179,10 +175,8 @@ AddEventHandler('rs_ballon:sellboat', function(args)
     local original_price = nil
 
     for _, globo in pairs(Config.Globo) do
-        if globo.Param.Model == _model then
-            original_price = globo.Param.Price
-            break
-        end
+        original_price = globo.Param.Price
+        break
     end
 
     if original_price then
@@ -192,10 +186,9 @@ AddEventHandler('rs_ballon:sellboat', function(args)
         User.addCurrency(0, sell_price)
 
         -- Eliminar el globo de la base de datos
-        exports.ghmattimysql:execute("DELETE FROM globo WHERE identifier = @identifier AND charid = @charid AND globo = @globo", {
+        exports.ghmattimysql:execute("DELETE FROM globo WHERE identifier = @identifier AND charid = @charid", {
             ['@identifier'] = u_identifier,
             ['@charid'] = u_charid,
-            ['@globo'] = _model
         })
 
         TriggerClientEvent("vorp:TipBottom", source, T.Buy .. " " .. sell_price .. "$", 5000)
