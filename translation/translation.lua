@@ -1,7 +1,7 @@
 Translation = {}
 
 Translation.Langs = {
-panish = {
+Spanish = {
     Buy = "Has vendido tu globo por ",
     Dont = "No se encontró el precio del globo en la configuración.",
     Error = "Error: No se recibieron datos válidos para la venta.",
